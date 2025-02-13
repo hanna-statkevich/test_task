@@ -35,7 +35,7 @@ export const stockReducer = (state = initialState, action: { type: StockAction; 
       if (action.payload.type === 'trade') {
         return {
           ...state,
-          data: [...state.data, ...action.payload.data].slice(-MAX_DATA_LENGTH),
+          data: [...state.data, ...action.payload.data.filter((v: any) => v.s === state.symbol)].slice(-MAX_DATA_LENGTH),
           error: null,
         };
       }

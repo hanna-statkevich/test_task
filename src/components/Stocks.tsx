@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Grid, Stack } from "@mui/material";
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { startStocksWebSocket, stopStocksWebSocket } from "../redux/actions/stockActions.ts";
 import { stocksSelector } from "../redux/selectors/stocksSelector.ts";
@@ -11,14 +11,13 @@ const Stocks = () => {
   const {data, symbol, connected, error} = useSelector(stocksSelector);
 
   const onSubmit = useCallback((values: { search: string }) => {
+
+    dispatch(stopStocksWebSocket(symbol));
     dispatch(startStocksWebSocket(values.search))
 
     return Promise.resolve()
-  }, [dispatch])
+  }, [dispatch, symbol])
 
-  useEffect(() => {
-    () => dispatch(stopStocksWebSocket(symbol))
-  }, [])
 
   return (
     <Box sx={{width: '500px'}}>
@@ -36,13 +35,13 @@ const Stocks = () => {
               direction="row"
               spacing={'auto'}
             >
-              <Button variant="outlined" onClick={() => dispatch(startStocksWebSocket('AAPL'))}>
+              <Button variant="outlined" onClick={()=>onSubmit({search:'AAPL'})}>
                 AAPL
               </Button>
-              <Button variant="outlined" onClick={() => dispatch(startStocksWebSocket('GOOG'))}>
+              <Button variant="outlined" onClick={()=>onSubmit({search:'GOOG'})}>
                 GOOG
               </Button>
-              <Button variant="outlined" onClick={() => dispatch(startStocksWebSocket('BINANCE:BTCUSDT'))}>
+              <Button variant="outlined" onClick={()=>onSubmit({search:'BINANCE:BTCUSDT'})}>
                 BTC
               </Button>
             </Stack>
